@@ -109,6 +109,17 @@ class Bot (commands.Bot):
                 await sound_viewers.play(self, message.channel, message.author.name.lower())
         await super().event_message(message)
 
+    # Send message to chat
+    async def send_message(self, channel, message):
+        # split the message into multiple messages using regex if it's more than 450 characters
+        if len(message) > 450:
+            messages = re.findall(r'.{1,450}(?:\s|$)', message)
+            for msg in messages:
+                await self.send_message(channel, msg)
+            return
+        await channel.send(message)
+            
+
     # story game
     @commands.command(name='start_game', aliases=['sg', 'story', 'game', 'sos'])
     @commands.cooldown(1, 300, commands.Bucket.user)
@@ -132,7 +143,7 @@ class Bot (commands.Bot):
         await ctx.send(f"Instruction reçu {user} je vais m'occuper de vous. Veuillez patientez le temps que je traite votre demande.")
         self.story_game = StoryGame(user, Story(15, init_msg))
         game_init_message = self.story_game.start()
-        await ctx.send(game_init_message)
+        await self.send_message(ctx, game_init_message)
 
  # ----------------------------------------------------------------#
 
