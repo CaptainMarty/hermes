@@ -100,7 +100,7 @@ class Bot (commands.Bot):
                     self.story_game = None
                     return
                 msg = self.story_game.play(message.content)
-                await message.channel.send(msg)
+                await self.send_message(message.channel, msg)
                 return
             if f"@{self.nick.lower()}" in message.content.lower():
                 await chatgpt.event_message_gpt(self, message)
@@ -112,13 +112,11 @@ class Bot (commands.Bot):
     # Send message to chat
     async def send_message(self, channel, message):
         # split the message into multiple messages using regex if it's more than 450 characters
-        if len(message) > 450:
-            messages = re.findall(r'.{1,450}(?:\s|$)', message)
-            for msg in messages:
-                await self.send_message(channel, msg)
-            return
-        await channel.send(message)
-            
+        messages = re.findall(r'.{1,450}(?:\s|$)', message)
+        print(messages)
+        for msg in messages:
+            await channel.send(msg)
+        return
 
     # story game
     @commands.command(name='start_game', aliases=['sg', 'story', 'game', 'sos'])
