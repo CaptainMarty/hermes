@@ -95,8 +95,8 @@ class Bot (commands.Bot):
         # Regarde dans le message User si il contient "chatgpt" ou "son du viewers"
         if message.author.name.lower() != self.nick.lower():
             if self.story_game is not None and self.story_game.player.lower() == message.author.name.lower():
-                if self.story_game.story.max_player_interaction - len(self.story_game.story.adventures) <= 0:
-                    await message.channel.send("Vous pouvez retourner à vos occupation. Merci d'avoir fait appel à moi. Vous pourrez me redemander de l'aide dans 300sec")
+                if self.story_game.story.max_player_interaction - self.story_game.story.player_interaction <= 0:
+                    await message.channel.send("Félicitation, vous avez terminé l'histoire ! Merci d'avoir joué !")
                     self.story_game = None
                     return
                 msg = self.story_game.play(message.content)
